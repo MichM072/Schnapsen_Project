@@ -19,11 +19,14 @@ from sklearn.neural_network import MLPClassifier
 import joblib
 
 from bots.rand import rand
-# from bots.rdeep import rdeep
+from bots.ml import ml
+from bots.ml2 import ml2
+from bots.ml3 import ml3
+from bots.rdeep import rdeep
 
 from bots.ml.ml import features
 
-def create_dataset(path, player=rand.Bot(), games=2000, phase=1):
+def create_dataset(path, player=ml.Bot(), games=500, phase=1):
 
     data = []
     target = []
@@ -86,7 +89,7 @@ parser = ArgumentParser()
 parser.add_argument("-d", "--dset-path",
                     dest="dset_path",
                     help="Optional dataset path",
-                    default="dataset.pkl")
+                    default="dataset3.pkl")
 
 parser.add_argument("-m", "--model-path",
                     dest="model_path",
@@ -107,7 +110,7 @@ parser.add_argument("--no-train",
 options = parser.parse_args()
 
 if options.overwrite or not os.path.isfile(options.dset_path):
-    create_dataset(options.dset_path, player=rand.Bot(), games=10000)
+    create_dataset(options.dset_path, player=ml.Bot(), games=10000)
 
 if options.train:
 
@@ -152,7 +155,7 @@ if options.train:
     print('instances per class: {}'.format(count))
 
     # Store the model in the ml directory
-    joblib.dump(model, "./bots/ml/" + options.model_path)
+    joblib.dump(model, "./bots/ml3/" + options.model_path)
 
     end = time.time()
 
