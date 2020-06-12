@@ -14,6 +14,11 @@ import joblib
 # with a different name, point this line to its path.
 DEFAULT_MODEL = os.path.dirname(os.path.realpath(__file__)) + '/model.pkl'
 
+# ONLY FOR BUG FIXING!!
+# Bypass the phase 1 exclusivity of a feature.
+PHASE1_BYPASS = True    # True = Allow feature to be used in phase 2. | False = The feature is not triggered in phase 2.
+
+
 
 class Bot:
     __randomize = True
@@ -147,7 +152,7 @@ def features(state):
     feature_set.append(opponents_played_card)
 
     # Add a card of the opposing player to feature set
-    if state.get_phase() == 1:
+    if state.get_phase() == 1 or PHASE1_BYPASS:
         cheat_card = state.get_cheat_card()
         feature_set.append(cheat_card)
 
@@ -202,7 +207,7 @@ def features(state):
     feature_set += opponents_played_card_onehot
 
     # Append one-hot encoded cheat card to feature set
-    if state.get_phase() == 1:
+    if state.get_phase() == 1 or PHASE1_BYPASS:
         cheat_card_onehot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         cheat_card_onehot[cheat_card if cheat_card is not None else 20] = 1
         feature_set += cheat_card_onehot
