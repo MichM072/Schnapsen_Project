@@ -345,7 +345,16 @@ class State:
 
 		return rep
 
+	def get_cheat_card(self):
+		"""
+		:return: A randomly selected card out of the opponent's hand
+		"""
+		hand_length = len(self.__deck.get_player_hand(util.other(self.whose_turn())))
+		if hand_length > 0:
+			return self.__deck.get_player_hand(util.other(self.whose_turn()))[int(random.randrange(0, hand_length))]
+
 	def get_opponents_played_card(self):
+
 		"""
 		:return: An integer representing the index of the card the opponent has played, None if no card played
 		"""

@@ -22,11 +22,12 @@ from bots.rand import rand
 from bots.ml import ml
 from bots.ml2 import ml2
 from bots.ml3 import ml3
+from bots.mlcheater import mlcheater
 from bots.rdeep import rdeep
 
-from bots.ml.ml import features
+from bots.mlcheater.mlcheater import features
 
-def create_dataset(path, player=ml.Bot(), games=500, phase=1):
+def create_dataset(path, player=rdeep.Bot(), games=10, phase=1):
 
     data = []
     target = []
@@ -110,7 +111,7 @@ parser.add_argument("--no-train",
 options = parser.parse_args()
 
 if options.overwrite or not os.path.isfile(options.dset_path):
-    create_dataset(options.dset_path, player=ml.Bot(), games=10000)
+    create_dataset(options.dset_path, player=rdeep.Bot(), games=10)
 
 if options.train:
 
@@ -155,7 +156,7 @@ if options.train:
     print('instances per class: {}'.format(count))
 
     # Store the model in the ml directory
-    joblib.dump(model, "./bots/ml3/" + options.model_path)
+    joblib.dump(model, "./bots/mlcheater/" + options.model_path)
 
     end = time.time()
 
