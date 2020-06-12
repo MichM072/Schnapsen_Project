@@ -204,7 +204,6 @@ def features(state):
     # Append one-hot encoded cheat card to feature set
     if state.get_phase() == 1:
         cheat_card_onehot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        print(cheat_card)
         cheat_card_onehot[cheat_card if cheat_card is not None else 20] = 1
         feature_set += cheat_card_onehot
 
