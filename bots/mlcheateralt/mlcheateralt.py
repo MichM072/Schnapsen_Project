@@ -96,6 +96,9 @@ def maximizing(state):
     return state.whose_turn() == 1
 
 
+cheat_card_holder = []
+
+
 def features(state):
     # type: (State) -> tuple[float, ...]
     """
@@ -104,8 +107,6 @@ def features(state):
     :param state: A state to be converted to a feature vector
     :return: A tuple of floats: a feature vector representing this state.
     """
-
-    global cheat_card_active
 
     feature_set = []
 
@@ -149,18 +150,22 @@ def features(state):
     feature_set.append(opponents_played_card)
 
     def check_cheat_card(opponent_card, cheat_card):
-        if opponent_card == cheat_card & cheat_card_active:
-            return not cheat_card_active
-        else:
-            return cheat_card_active
+        if opponent_card == cheat_card:
+            cheat_card_holder.clear()
+            new_card = state.get_cheat_card(cheat_card)
+            cheat_card_holder.append(new_card)
 
     # Add a card of the opposing player to feature set
     if state.get_phase() == 1:
-        cheat_card = state.get_cheat_card()
-        check_cheat_card(opponents_played_card, cheat_card)
-        if not cheat_card_active:
-            feature_set.append(cheat_card)
-            cheat_card_active = True
+        if len(cheat_card_holder) == 0 or cheat_card_holder[0] is None:
+            cheat_card_holder.clear()
+            cheat_card = state.get_cheat_card()
+            cheat_card_holder.append(cheat_card)
+
+        elif len(cheat_card_holder) > 0:
+            check_cheat_card(opponents_played_card, cheat_card_holder[0])
+        feature_set.append(cheat_card_holder[0])
+
     elif state.get_phase() == 2:
         cheat_card = 20
         feature_set.append(cheat_card)
@@ -218,7 +223,7 @@ def features(state):
     # Append one-hot encoded cheat card to feature set
     if state.get_phase() == 1:
         cheat_card_onehot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        cheat_card_onehot[cheat_card if cheat_card is not None else 20] = 1
+        cheat_card_onehot[cheat_card_holder[0] if cheat_card_holder[0] is not None else 20] = 1
         feature_set += cheat_card_onehot
     elif state.get_phase() == 2:
         cheat_card_onehot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]

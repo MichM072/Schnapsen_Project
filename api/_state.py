@@ -336,7 +336,7 @@ class State:
 
 		rep += "\n"
 		rep += "There are {} cards in the stock\n".format(self.__deck.get_stock_size())
-		
+
 		trick = self.__deck.get_trick()
 		if trick[0] is not None:
 			rep += "Player 1 has played card: {} of {}\n".format(util.get_rank(trick[0]), util.get_suit(trick[0]))
@@ -345,13 +345,17 @@ class State:
 
 		return rep
 
-	def get_cheat_card(self):
+	def get_cheat_card(self, cheat_card=None):
 		"""
 		:return: A randomly selected card out of the opponent's hand
 		"""
-		hand_length = len(self.__deck.get_player_hand(util.other(self.whose_turn())))
+		opponents_deck = self.__deck.get_player_hand(util.other(self.whose_turn()))
+		if cheat_card is not None:
+			opponents_deck.remove(cheat_card)
+		hand_length = len(opponents_deck)
 		if hand_length > 0:
-			return self.__deck.get_player_hand(util.other(self.whose_turn()))[int(random.randrange(0, hand_length))]
+			return opponents_deck[int(random.randrange(0, hand_length))]
+
 
 	def get_opponents_played_card(self):
 
@@ -532,11 +536,11 @@ class State:
 			raise RuntimeError("Incorrect trick format. List of length 2 needed.")
 		if trick[0] is None or trick[1] is None:
 			raise RuntimeError("An incomplete trick was attempted to be evaluated.")
-		
+
 		# If the two cards of the trick have the same suit
 		if Deck.get_suit(trick[0]) == Deck.get_suit(trick[1]):
 
-			# We only compare indices since the convention we defined in Deck 
+			# We only compare indices since the convention we defined in Deck
 			# puts higher rank cards at lower indices, when considering the same color.
 			return 1 if trick[0] < trick[1] else 2
 
