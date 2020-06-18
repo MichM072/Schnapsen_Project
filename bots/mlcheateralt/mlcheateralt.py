@@ -14,11 +14,6 @@ import joblib
 # with a different name, point this line to its path.
 DEFAULT_MODEL = os.path.dirname(os.path.realpath(__file__)) + '/model.pkl'
 
-# ONLY FOR BUG FIXING!!
-# Bypass the phase 1 exclusivity of a feature.
-PHASE1_BYPASS = False    # True = Allow feature to be used in phase 2. | False = The feature is not triggered in phase 2.
-
-
 
 class Bot:
     __randomize = True
@@ -110,6 +105,8 @@ def features(state):
     :return: A tuple of floats: a feature vector representing this state.
     """
 
+    global cheat_card_active
+
     feature_set = []
 
     # Add player 1's points to feature set
@@ -151,10 +148,19 @@ def features(state):
     opponents_played_card = state.get_opponents_played_card()
     feature_set.append(opponents_played_card)
 
+    def check_cheat_card(opponent_card, cheat_card):
+        if opponent_card == cheat_card & cheat_card_active:
+            return not cheat_card_active
+        else:
+            return cheat_card_active
+
     # Add a card of the opposing player to feature set
     if state.get_phase() == 1:
         cheat_card = state.get_cheat_card()
-        feature_set.append(cheat_card)
+        check_cheat_card(opponents_played_card, cheat_card)
+        if not cheat_card_active:
+            feature_set.append(cheat_card)
+            cheat_card_active = True
     elif state.get_phase() == 2:
         cheat_card = 20
         feature_set.append(cheat_card)
