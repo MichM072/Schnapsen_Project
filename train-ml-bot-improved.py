@@ -46,7 +46,7 @@ def create_dataset(path, player=rdeep.Bot(), games=500, phase=1):
         games = int(options.games)
 
     if options.dset_path == "dataset3.pkl":
-        path = "bots/{}/{}".format(options.training_bot, "dataset3.pkl")
+        path = "bots/{}/{}.pkl".format(options.training_bot, options.dset_name)
 
     print("Training will be done for " + str(options.training_bot)
           + " using " + str(options.player) + " playing " + str(games) + " games.")
@@ -145,12 +145,17 @@ parser.add_argument("-g", "--games",
                     help="Choose how many games will be played",
                     default=500)
 
+parser.add_argument("-dn", "--dset-name",
+                    dest="dset_name",
+                    help="Choose the name of the data set you will create or use",
+                    default="dataset3.pkl")
+
 options = parser.parse_args()
 
 path = options.dset_path
 
 if options.dset_path == "dataset3.pkl":
-    path = "bots/{}/{}".format(options.training_bot, "dataset3.pkl")
+    path = "bots/{}/{}.pkl".format(options.training_bot, options.dset_name)
 
 if options.overwrite or not os.path.isfile(path):
     create_dataset(options.dset_path, player=rdeep.Bot(), games=500)
@@ -199,7 +204,7 @@ if options.train:
     print('instances per class: {}'.format(count))
 
     # Store the model in the ml directory
-    joblib.dump(model, ("./bots/" + str(options.training_bot) + "/") + options.model_path)
+    joblib.dump(model, ("./bots/" + str(options.training_bot) + "/") + options.model_path + ".pkl")
 
     end = time.time()
 
