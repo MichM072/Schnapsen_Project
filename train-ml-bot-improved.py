@@ -147,7 +147,12 @@ parser.add_argument("-g", "--games",
 
 options = parser.parse_args()
 
-if options.overwrite or not os.path.isfile(options.dset_path):
+path = options.dset_path
+
+if options.dset_path == "dataset3.pkl":
+    path = "bots/{}/{}".format(options.training_bot, "dataset3.pkl")
+
+if options.overwrite or not os.path.isfile(path):
     create_dataset(options.dset_path, player=rdeep.Bot(), games=500)
 
 if options.train:
@@ -173,11 +178,6 @@ if options.train:
     start = time.time()
 
     print("Starting training phase...")
-
-    path = options.dset_path
-
-    if options.dset_path == "dataset3.pkl":
-        path = "bots/{}/{}".format(options.training_bot, "dataset3.pkl")
 
     with open(path, 'rb') as output:
         data, target = pickle.load(output)
