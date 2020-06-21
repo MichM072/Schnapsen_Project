@@ -118,7 +118,7 @@ parser.add_argument("-d", "--dset-path",
 parser.add_argument("-m", "--model-path",
                     dest="model_path",
                     help="Optional model path. Note that this path starts in bots/ml/ instead of the base folder, like dset_path above.",
-                    default="model.pkl")
+                    default="model")
 
 parser.add_argument("-o", "--overwrite",
                     dest="overwrite",
