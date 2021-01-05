@@ -56,7 +56,7 @@ class Bot:
             # IMPLEMENT: Add a function call so that 'value' will
             # contain the predicted value of 'next_state'
             # NOTE: This is different from the line in the minimax/alphabeta bot
-            value = self.heuristic(next_state)
+            value = ???
 
             if maximizing(state):
                 if value > best_value:
@@ -107,43 +107,35 @@ def features(state):
     feature_set = []
 
     # Add player 1's points to feature set
-    p1_points = state.get_points(1)
-    feature_set.append(p1_points)
+    p1_points = ???
 
     # Add player 2's points to feature set
-    p2_points = state.get_points(2)
-    feature_set.append(p2_points)
+    p2_points = ???
 
     # Add player 1's pending points to feature set
-    p1_pending_points = state.get_pending_points(1)
-    feature_set.append(p1_pending_points)
+    p1_pending_points = ???
 
-    # Add player 2's pending points to feature set
-    p2_pending_points = state.get_pending_points(2)
-    feature_set.append(p2_pending_points)
+    # Add plauer 2's pending points to feature set
+    p2_pending_points = ???
 
     # Get trump suit
-    trump_suit = state.get_trump_suit()
+    trump_suit = ???
 
     # Add phase to feature set
-    phase = state.get_phase()
-    feature_set.append(phase)
+    phase = ???
 
     # Add stock size to feature set
-    stock_size = state.get_stock_size()
-    feature_set.append(stock_size)
+    stock_size = ???
 
     # Add leader to feature set
-    leader = state.leader()
-    feature_set.append(leader)
+    leader = ???
 
     # Add whose turn it is to feature set
-    whose_turn = state.whose_turn()
-    feature_set.append(whose_turn)
+    whose_turn = ???
 
     # Add opponent's played card to feature set
-    opponents_played_card = state.get_opponents_played_card()
-    feature_set.append(opponents_played_card)
+    opponents_played_card = ???
+
 
     ################## You do not need to do anything below this line ########################
 
@@ -151,8 +143,8 @@ def features(state):
 
     # Perform one-hot encoding on the perspective.
     # Learn more about one-hot here: https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python/
-    perspective = [card if card != 'U' else [1, 0, 0, 0, 0, 0] for card in perspective]
-    perspective = [card if card != 'S' else [0, 1, 0, 0, 0, 0] for card in perspective]
+    perspective = [card if card != 'U'   else [1, 0, 0, 0, 0, 0] for card in perspective]
+    perspective = [card if card != 'S'   else [0, 1, 0, 0, 0, 0] for card in perspective]
     perspective = [card if card != 'P1H' else [0, 0, 1, 0, 0, 0] for card in perspective]
     perspective = [card if card != 'P2H' else [0, 0, 0, 1, 0, 0] for card in perspective]
     perspective = [card if card != 'P1W' else [0, 0, 0, 0, 1, 0] for card in perspective]
@@ -163,13 +155,13 @@ def features(state):
 
     # Append normalized points to feature_set
     total_points = p1_points + p2_points
-    feature_set.append(p1_points / total_points if total_points > 0 else 0.)
-    feature_set.append(p2_points / total_points if total_points > 0 else 0.)
+    feature_set.append(p1_points/total_points if total_points > 0 else 0.)
+    feature_set.append(p2_points/total_points if total_points > 0 else 0.)
 
     # Append normalized pending points to feature_set
     total_pending_points = p1_pending_points + p2_pending_points
-    feature_set.append(p1_pending_points / total_pending_points if total_pending_points > 0 else 0.)
-    feature_set.append(p2_pending_points / total_pending_points if total_pending_points > 0 else 0.)
+    feature_set.append(p1_pending_points/total_pending_points if total_pending_points > 0 else 0.)
+    feature_set.append(p2_pending_points/total_pending_points if total_pending_points > 0 else 0.)
 
     # Convert trump suit to id and add to feature set
     # You don't need to add anything to this part
@@ -182,7 +174,7 @@ def features(state):
     feature_set += [1, 0] if phase == 1 else [0, 1]
 
     # Append normalized stock size to feature set
-    feature_set.append(stock_size / 10)
+    feature_set.append(stock_size/10)
 
     # Append one-hot encoded leader to feature set
     feature_set += [1, 0] if leader == 1 else [0, 1]
@@ -194,10 +186,6 @@ def features(state):
     opponents_played_card_onehot = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     opponents_played_card_onehot[opponents_played_card if opponents_played_card is not None else 20] = 1
     feature_set += opponents_played_card_onehot
-
-    for index, element in enumerate(feature_set):
-        if element == None:
-            feature_set[index] = 0
 
     # Return feature set
     return feature_set
